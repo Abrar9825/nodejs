@@ -1,0 +1,16 @@
+REST API
+
+GET /api/user / -list all user
+
+GET /api/user/1 / -get user id 1
+GET /api/user/2 / -get user id 2
+
+POST /api/user -create user
+
+PATCH /api/user/1 :- edit user with ID 1
+
+DELETE /api/user/1 :- Delete user with ID 1
+
+
+always use /api to make hybrid server
+to get fake data we are using mockaroo website and downlaod json data
