@@ -20,3 +20,8 @@ Create files
 Update files
 Delete files
 Rename files
+
+
+two type of auntication 
+statefull:which maintain state or data server side
+stateless:which has no state
