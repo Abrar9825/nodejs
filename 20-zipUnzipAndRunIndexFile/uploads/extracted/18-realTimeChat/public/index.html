@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+</head>
+<body>
+    <h1>Chat Application</h1>
+    <input type="text" id="msg" placeholder="Enter Your Message">
+    <button id="sendbtn">Send</button>
+    <select id="language">
+        <option value="en">English</option>
+        <option value="es">Spanish</option>
+        <option value="fr">French</option>
+        <!-- Add more languages as needed -->
+    </select>
+    <div id="messages"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js" integrity="sha512-luMnTJZ7oEchNDZAtQhgjomP1eZefnl82ruTH/3Oj/Yu5qYtwL7+dVRccACS/Snp1lFXq188XFipHKYE75IaQQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        const socket = io();
+        const sendbtn = document.getElementById("sendbtn");
+        const msg = document.getElementById("msg");
+        const allMessages = document.getElementById("messages");
+        const language = document.getElementById("language");
+
+        socket.on("msg", (message) => {
+            const p = document.createElement('p');
+            p.innerText = message;
+            allMessages.appendChild(p);
+        });
+
+        sendbtn.addEventListener('click', async () => {
+            const message = msg.value;
+            const targetLanguage = language.value;
+
+            try {
+                const response = await fetch('/speechtranslator', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ speech: message, language: targetLanguage })
+                });
+                const data = await response.json();
+
+                if (data.translatedText) {
+                    socket.emit("userMessage", data.translatedText);
+                } else {
+                    console.error('Translation failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
